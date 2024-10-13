@@ -1,7 +1,7 @@
 Class VistA.FileMan.Utility
 {
 
-ClassMethod GetFileNo(ByRef pFileNo) As %Status
+ClassMethod GetFileNo(ByRef pFileNo) As %String
 {
 	Set tSC = $$$OK
 	Set myquery = "SELECT ID, FileNo, Filename FROM VistA_FileMan.File"
@@ -12,7 +12,9 @@ ClassMethod GetFileNo(ByRef pFileNo) As %Status
 	While rset.%Next() {
 		Set pFileNo($Increment(pFileNo)) = rset.FileNo
 	}
-	Quit tSC
+	Set tRandom = $Random(pFileNo)
+	Set tReturn = pFileNo(tRandom + 1)
+	Quit tReturn
 }
 
 }
