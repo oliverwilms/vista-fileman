@@ -29,11 +29,12 @@ ClassMethod MakeCall(pFlag As %String = 0) As gncrud.model.Call
 
 ClassMethod MakeField(pFile As %String = "") As gncrud.model.Field
 {
-	Set field = ##class(gncrud.model.Field).%New()
-	Set field.id = 12
-	Set field.name = "COMPLETION NOTE"
+	//Set field = ##class(gncrud.model.Field).%New()
+	Set field = ##class(VistA.FileMan.Utility).GetField(pFile)
+	//Set field.id = 12
+	//Set field.name = "COMPLETION NOTE"
 	Set field.primitiveValue = "My masterful comment."
-	Set field.valuetype = "WORD-PROCESSING"
+	//Set field.valuetype = "WORD-PROCESSING"
 	Quit field
 }
 
@@ -54,7 +55,7 @@ ClassMethod MakeRecord() As gncrud.model.VistaResponserecords
 	//Set record.id = 668
 	Set record.id = ##class(VistA.FileMan.Utility).GetFileNo(.f)
 	Set record.fields = ##class(%Library.ListOfDataTypes).%New()
-	Do record.fields.Insert(..MakeField())
+	Do record.fields.Insert(..MakeField(record.id))
 	Quit record
 }
 
