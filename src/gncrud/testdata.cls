@@ -35,6 +35,7 @@ ClassMethod MakeField(pFile As %String = "") As gncrud.model.Field
 	//Set field.name = "COMPLETION NOTE"
 	Set field.primitiveValue = "My masterful comment."
 	//Set field.valuetype = "WORD-PROCESSING"
+	If (field.valuetype ? 1"WORD-PROCESSING".E) { Set field.valuetype = "WORD-PROCESSING" }
 	Quit field
 }
 
