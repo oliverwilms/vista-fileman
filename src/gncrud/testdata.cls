@@ -12,14 +12,19 @@ ClassMethod MakeAction(pOneOf As %String = "") As gncrud.model.Action
 	Quit ""
 }
 
-ClassMethod MakeCall(pFlag As %String = 0) As gncrud.model.Call
+/// Call requires actions and istransactional
+ClassMethod MakeCall(
+	pActions As %String = 1,
+	pTransFlag As %String = 0,
+	pCorrId As %String = "") As gncrud.model.Call
 {
 	Set call = ##class(gncrud.model.Call).%New()
 	Set pAction = "Operation"
 	Set call.actions = ##class(%Library.ListOfDataTypes).%New()
-	Do call.actions.Insert(..MakeAction(pAction))
-	Set call.correlationid = "111111111"
-	If pFlag {
+	For ii = 1:1:pActions { Do call.actions.Insert(..MakeAction(pAction)) }
+	//Set call.correlationid = "111111111"
+	If (pCorrId '= "") Set call.correlationid = $Get(pCorrId,"111111111")
+	If pTransFlag {
 		Set call.istransactional = 1
 	} Else {
 		Set call.istransactional = 0
@@ -56,7 +61,6 @@ ClassMethod MakeRecord() As gncrud.model.VistaResponserecords
 	Set tFileManFileNo = 123  // REQUEST/CONSULTATION
 	Set tFileManFileNo = 668  // PROSTHETIC SUSPENSE
 	Set record = ##class(gncrud.model.VistaResponserecords).%New()
-	//Set record.id = 668
 	Set record.id = ##class(VistA.FileMan.Utility).GetFileNo(.f)
 	Set record.fields = ##class(%Library.ListOfDataTypes).%New()
 	Do record.fields.Insert(..MakeField(record.id))
@@ -67,13 +71,27 @@ ClassMethod test() As %Status
 {
 	Set dynObj = {}
 	Set dynObj.calls = []
-	Set call = ..MakeCall()
+	Set call = ..MakeCall(1,0,"111111111")
 	//zw call
 	do call.%JSONExportToString(.pCallStr)
 	Do dynObj.calls.%Push({}.%FromJSON(pCallStr))
 	Set dynObj."site_id" = "12345"
 	//zw dynObj.%ToJSON()
 	zw dynObj
+	Quit $$$OK
+}
+
+/// One non-transactional Call with TWO Actions
+ClassMethod test2() As %Status
+{
+	// VistaRequest requires calls and site_id
+	Set dynObj = {}
+	Set dynObj.calls = []
+	Set call = ..MakeCall(2,0,"")
+	do call.%JSONExportToString(.pCallStr)
+	Do dynObj.calls.%Push({}.%FromJSON(pCallStr))
+	Set dynObj."site_id" = "405"
+	Write dynObj.%ToJSON(),!
 	Quit $$$OK
 }
 
