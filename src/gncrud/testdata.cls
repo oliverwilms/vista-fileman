@@ -29,12 +29,14 @@ ClassMethod MakeCall(pFlag As %String = 0) As gncrud.model.Call
 
 ClassMethod MakeField(pFile As %String = "") As gncrud.model.Field
 {
+	#Dim field As gncrud.model.Field
 	//Set field = ##class(gncrud.model.Field).%New()
 	Set field = ##class(VistA.FileMan.Utility).GetField(pFile)
 	//Set field.id = 12
 	//Set field.name = "COMPLETION NOTE"
-	Set field.primitiveValue = "My masterful comment."
+	Set field.primitivevalue = "My masterful comment."
 	//Set field.valuetype = "WORD-PROCESSING"
+	If (field.valuetype = "DATE") { Set field.valuetype = "DATE/TIME" }
 	If (field.valuetype ? 1"WORD-PROCESSING".E) { Set field.valuetype = "WORD-PROCESSING" }
 	Quit field
 }
@@ -44,7 +46,8 @@ ClassMethod MakeOperation() As gncrud.model.Operation
 	Set operation = ##class(gncrud.model.Operation).%New()
 	Set operation.entitytype = "Operation"
 	Set operation.operation = "CREATE"
-	Set operation.record = ..MakeRecord()
+	//Set operation.record = ..MakeRecord()
+	Set operation.file = ..MakeRecord()
 	Quit operation
 }
 
