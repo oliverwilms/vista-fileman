@@ -95,4 +95,20 @@ ClassMethod test2() As %Status
 	Quit $$$OK
 }
 
+/// Two non-transactional Call with ? Actions
+ClassMethod test3(pCalls As %String = 2) As %Status
+{
+	// VistaRequest requires calls and site_id
+	Set dynObj = {}
+	Set dynObj.calls = []
+	For ii = 1:1:pCalls {
+		Set call = ..MakeCall(1,0,"")
+		do call.%JSONExportToString(.pCallStr)
+		Do dynObj.calls.%Push({}.%FromJSON(pCallStr))
+	}
+	Set dynObj."site_id" = "405"
+	Write dynObj.%ToJSON(),!
+	Quit $$$OK
+}
+
 }
